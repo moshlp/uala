@@ -1,5 +1,9 @@
 package com.example.uala.domain
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class MealResponse(
 
     var idMeal: String? = null,
@@ -59,4 +63,4 @@ data class MealResponse(
     var strMeasure19: String? = null,
     var strMeasure20: String? = null,
     var strSource: String? = null
-)
+) : Parcelable

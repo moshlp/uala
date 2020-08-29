@@ -27,6 +27,9 @@ class MealsAdapter  (rv: RecyclerView, val clickListener: ThumbnailListener) : B
                 .into(holder.binding.imageView)
             holder.binding.nombre.text = item.strMeal
             holder.binding.categoria.text = item.strCategory
+            holder.binding.imageView.setOnClickListener {
+                clickListener.clickListener(item)
+            }
         }
     }
 

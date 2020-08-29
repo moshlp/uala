@@ -1,11 +1,12 @@
 package com.example.uala.presentation.list
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.uala.R
 import com.example.uala.databinding.ActivityListBinding
 import com.example.uala.domain.ListMealsResponse
+import com.example.uala.presentation.detail.DetailActivity
 import com.example.uala.presentation.list.adapter.MealsAdapter
 import com.example.uala.presentation.list.viewmodel.ListViewModel
 import com.example.uala.utils.Status
@@ -65,7 +67,9 @@ class ListActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_list)
         binding.rvMeals.layoutManager = LinearLayoutManager(this)
         adapter = MealsAdapter(binding.rvMeals, MealsAdapter.ThumbnailListener {
-            //      startActivity(Intent(this, InstallmentsActivity::class.java))
+            var intent = Intent(this, DetailActivity::class.java)
+            intent.putExtra("meal", it)
+            startActivity(intent)
         })
         binding.rvMeals.addItemDecoration(
             DividerItemDecoration(
