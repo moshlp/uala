@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Uala</string>
+    <string name="hint_search">Type meal name</string>
+</resources>
