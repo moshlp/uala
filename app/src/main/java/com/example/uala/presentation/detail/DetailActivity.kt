@@ -1,14 +1,16 @@
 package com.example.uala.presentation.detail
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.annotation.NonNull
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.uala.R
 import com.example.uala.databinding.ActivityDetailBinding
-import com.example.uala.databinding.ActivityListBinding
 import com.example.uala.domain.MealResponse
 import com.example.uala.presentation.detail.viewmodel.DetailViewModel
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.squareup.picasso.Picasso
 
 class DetailActivity : AppCompatActivity() {
@@ -41,6 +43,20 @@ class DetailActivity : AppCompatActivity() {
             viewModel?.meal = meal
             viewModel?.setIngredients()
             binding.viewmodel = viewModel
+            binding.thirdPartyPlayerView.addYouTubePlayerListener(object :
+                AbstractYouTubePlayerListener() {
+                override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
+                    val videoId = getVideoId(meal)
+                    if (videoId != null) {
+                        youTubePlayer.cueVideo(videoId, 0f)
+                    }
+                }
+            })
         }
+
+    }
+
+    private fun getVideoId(meal: MealResponse): String? {
+        return meal.strYoutube?.substringAfter("=")
     }
 }
