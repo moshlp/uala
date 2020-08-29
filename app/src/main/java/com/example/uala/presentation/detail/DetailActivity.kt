@@ -39,6 +39,7 @@ class DetailActivity : AppCompatActivity() {
                 .placeholder(R.drawable.ic_baseline_not_interested_24)
                 .into(binding.mealPhoto)
             viewModel?.meal = meal
+            viewModel?.setIngredients()
             binding.viewmodel = viewModel
         }
     }

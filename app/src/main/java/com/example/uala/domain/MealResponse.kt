@@ -62,5 +62,6 @@ data class MealResponse(
     var strMeasure18: String? = null,
     var strMeasure19: String? = null,
     var strMeasure20: String? = null,
-    var strSource: String? = null
+    var strSource: String? = null,
+    var ingredients: String? = null
 ) : Parcelable
