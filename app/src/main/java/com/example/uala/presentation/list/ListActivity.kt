@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.uala.R
@@ -18,7 +19,13 @@ import com.example.uala.presentation.detail.DetailActivity
 import com.example.uala.presentation.list.adapter.MealsAdapter
 import com.example.uala.presentation.list.viewmodel.ListViewModel
 import com.example.uala.utils.Status
+import com.squareup.picasso.Picasso
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
+import kotlin.concurrent.scheduleAtFixedRate
 
 class ListActivity : AppCompatActivity() {
 
@@ -57,9 +64,39 @@ class ListActivity : AppCompatActivity() {
         }
     }
 
+    private fun setBannerMeal() {
+        viewModel.getRandomMeal().observe(this, Observer {
+            it?.let { resource ->
+                when (resource.status) {
+                    Status.SUCCESS -> {
+                        resource.data?.let { list -> updateBanner(list) }
+                    }
+                    Status.ERROR -> {
+                        Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+                    }
+                    Status.LOADING -> {
+                    }
+                }
+            }
+        })
+    }
+
+    private fun updateBanner(list: ListMealsResponse) {
+        val meal = list.meals[0]
+        Picasso.get()
+            .load(meal.strMealThumb)
+            .error(R.drawable.ic_baseline_not_interested_24)
+            .placeholder(R.drawable.ic_baseline_not_interested_24)
+            .into(binding.imageBanner)
+    }
+
     private fun retrieveList(meals: ListMealsResponse) {
-        adapter.apply {
-            setData(meals.meals)
+        if (meals.meals != null) {
+            adapter.apply {
+                setData(meals.meals)
+            }
+        } else {
+            Toast.makeText(this, "No meals found", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -89,6 +126,13 @@ class ListActivity : AppCompatActivity() {
                 searchMeals(s.toString())
             }
         })
-
+        val timer = Timer("schedule", true)
+        timer.scheduleAtFixedRate(30000, 30000) {
+            lifecycleScope.launch {
+                withContext(Dispatchers.Main) {
+                    setBannerMeal()
+                }
+            }
+        }
     }
 }

@@ -7,6 +7,9 @@ class MainRepository (private val apiHelper: ApiHelper) {
 
     suspend fun getMealsByName(name : String) = apiHelper.getMealsByName(name)
 
+    suspend fun getRandomMeal() = apiHelper.getRandomMeal()
+
+
 }
 
 
